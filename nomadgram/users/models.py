@@ -7,6 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 
 class User(AbstractUser):       # AbstractUser has field (username, email, name, password etc.)
 
+    """ User Model """ 
+
     GENDER_CHOICES = (
         ('male', 'Male'),
         ('female', 'Female'),
