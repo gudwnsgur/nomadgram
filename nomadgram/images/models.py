@@ -12,7 +12,6 @@ class TimeStampedModel(models.Model):
     class Meta: 
         abstract = True #abstract base class
 
-
 class Image(TimeStampedModel):
 
     """ Image Model """
@@ -22,6 +21,9 @@ class Image(TimeStampedModel):
     caption = models.TextField()
     creator = models.ForeignKey(user_models.User, on_delete=models.PROTECT, null=True)
 
+    def __str__(self):
+        return '{} - {}'.format(self.location, self.caption)
+
 class Comment(TimeStampedModel):
 
     """ Comment Model """
@@ -29,6 +31,9 @@ class Comment(TimeStampedModel):
     message = models.TextField()
     creator = models.ForeignKey(user_models.User, on_delete=models.PROTECT, null=True)
     image = models.ForeignKey(Image, on_delete=models.PROTECT, null=True)
+    
+    def __str__(self):
+        return self.message
 
 
 class Like(TimeStampedModel):
@@ -37,3 +42,6 @@ class Like(TimeStampedModel):
 
     creator = models.ForeignKey(user_models.User, on_delete=models.PROTECT, null=True)
     image = models.ForeignKey(Image, on_delete=models.PROTECT, null=True)
+
+    def __str__(self):
+        return ' User : {} - Image Caption : {}'.format(self.creator.username, self.image.caption)
