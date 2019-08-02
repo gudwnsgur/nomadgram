@@ -15,15 +15,22 @@ class TimeStampedModel(models.Model):
 class Image(TimeStampedModel):
 
     """ Image Model """
-    id = 1
     file = models.ImageField()
     location = models.CharField(max_length = 140)
     caption = models.TextField()
-    creator = models.ForeignKey(user_models.User, on_delete=models.PROTECT, null=True)
+    creator = models.ForeignKey(user_models.User, on_delete=models.PROTECT, null=True, related_name='images')
     #creator : 생성자
+
+    #property : field of a model that dosen't go DB but still is inside of a model
+    @property
+    def like_count(self):
+        return self.likes.all().count()
 
     def __str__(self):
         return '{} - {}'.format(self.location, self.caption)
+
+    class Meta:
+        ordering = ['-created_at']
 
 class Comment(TimeStampedModel):
 

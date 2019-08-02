@@ -1,30 +1,31 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from . import models
-from . import serializers
+from . import serializers, models
 
-class ListAllImages(APIView):
-
-    def get(self, request, format=None):    # format will be json
-
-        all_images = models.Image.objects.all() # get all objects kind of images in models
-        # variable that all of image object on DB
-
-        serializer = serializers.ImageSerializer(all_images, many=True)
-        return Response(data=serializer.data)   # end of function
-
-
-class ListAllComments(APIView):
-    def get(self, request, format=None): 
-        all_comments = models.Comment.objects.all() # get all objects kind of comments in models
-
-        serializer = serializers.CommentSerializer(all_comments, many=True)
-        return Response(data=serializer.data)
-
-
-class ListAllLikes(APIView):
+class Feed(APIView):
     def get(self, request, format=None):
-        all_likes = models.Like.objects.all() # get all likes in models
+        
+        user = request.user
+        following_users = user.following.all()
 
-        serializer = serializers.LikeSerializer(all_likes, many=True)
-        return Response(data=serializer.data)
+        image_list = []
+
+        for following_user in following_users:
+            user_images = following_user.images.all()[:2]
+
+            for image in user_images:
+
+                image_list.append(image)
+
+        sorted_list = sorted(image_list, key=lambda image:image.created_at, reverse=True)
+        
+        serializer = serializers.ImageSerializer(sorted_list, many=True)
+
+        return Response(serializer.data)
+        
+        
+
+class LikeImage(APIView):
+    def get(self, request, id, format=None):         # if something changes on the DataBase, the request should be post
+        print(id)
+        return Response(status=200)
