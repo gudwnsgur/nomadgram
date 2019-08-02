@@ -1,5 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import status
 from . import serializers, models
 
 class Feed(APIView):
@@ -24,8 +25,31 @@ class Feed(APIView):
         return Response(serializer.data)
         
         
+# post의 문제점 : browser에 새로고침하면서 사용할 수 없다.
 
 class LikeImage(APIView):
-    def get(self, request, id, format=None):         # if something changes on the DataBase, the request should be post
-        print(id)
-        return Response(status=200)
+    def get(self, request, image_id, format=None):         # if something changes on the DataBase, the request should be post
+        
+        user = request.user
+
+        try :
+            found_image = models.Image.objects.get(id=image_id)   # 필터링해서 model을 읽고자 할 때 objects 사용
+        except models.Image.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            preexisiting_like = models.Like.objects.get(
+                creator = user,
+                image = found_image
+            )
+            preexisiting_like.delete()  
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        except models.Like.DoesNotExist:
+            new_like = models.Like.objects.create(
+                creator = user,
+                image = found_image
+            )   
+        new_like.save()
+        return Response(status=status.HTTP_201_CREATED)
+
