@@ -16,13 +16,11 @@ class FeedUserSerializer(serializers.ModelSerializer):
         )
 
 
-
 class CommentSerializer(serializers.ModelSerializer):
 
     # image = ImageSerializer()    image field inside of Comment model
 
-    creator = FeedUserSerializer()
-
+    creator = FeedUserSerializer(read_only=True)
     class Meta:
         model = models.Comment
         fields = (
