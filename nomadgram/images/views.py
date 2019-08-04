@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from . import serializers, models
 
+
+# Url : path("", view=views.Feed.as_view(), name='feed')
 class Feed(APIView):
     def get(self, request, format=None):
         
@@ -23,18 +25,19 @@ class Feed(APIView):
         
         serializer = serializers.ImageSerializer(sorted_list, many=True)
 
-        return Response(serializer.data)
-        
-        
-# post의 문제점 : browser에 새로고침하면서 사용할 수 없다.
+        return Response(serializer.data)        
 
+
+
+# Url : path("<int:image_id>/likes/", view=views.LikeImage.as_view(), name='like_image')
 class LikeImage(APIView):
-    def post(self, request, image_id, format=None):         # if something changes on the DataBase, the request should be post
-        
+    def post(self, request, image_id, format=None):         
+        # if something changes on the DataBase, the request should be post
         user = request.user
 
         try :
-            found_image = models.Image.objects.get(id=image_id)   # 필터링해서 model을 읽고자 할 때 objects 사용
+            found_image = models.Image.objects.get(id=image_id)   
+            # 필터링해서 model을 읽고자 할 때 objects 사용
         except models.Image.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -53,6 +56,9 @@ class LikeImage(APIView):
             new_like.save()
             return Response(status=status.HTTP_201_CREATED)
 
+
+
+# Url : path("<int:image_id>/unlikes/", view=views.UnLikeImage.as_view(), name='unlike_image')
 class UnLikeImage(APIView):
     def delete(self, request, image_id, format=None):
 
@@ -74,6 +80,7 @@ class UnLikeImage(APIView):
 
 
 
+# Url : path("<int:image_id>/comments/", view=views.CommentOnImage.as_view(), name='commet_image')
 class CommentOnImage(APIView):
 
     def post(self, request, image_id, format=None):
@@ -93,7 +100,9 @@ class CommentOnImage(APIView):
         else : 
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    
+
+
+# Url : path("comments/<int:comment_id>/", view=views.Comment.as_view(), name='comment')
 class Comment(APIView):
     def delete(self, request, comment_id, format=None):
         
