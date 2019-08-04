@@ -39,20 +39,39 @@ class LikeImage(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         try:
-            preexisiting_like = models.Like.objects.get(
+            models.Like.objects.get(
                 creator = user,
                 image = found_image
             )
-            preexisiting_like.delete()  
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_304_NOT_MODIFIED)
 
         except models.Like.DoesNotExist:
             new_like = models.Like.objects.create(
                 creator = user,
                 image = found_image
             )   
-        new_like.save()
-        return Response(status=status.HTTP_201_CREATED)
+            new_like.save()
+            return Response(status=status.HTTP_201_CREATED)
+
+class UnLikeImage(APIView):
+    def delete(self, request, image_id, format=None):
+
+        user = request.user
+        try:
+            found_image = models.Image.objects.get(id=image_id)
+        except models.Image.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            preexisiting_like = models.Like.objects.get(
+                creator = user,
+                image = found_image
+            )
+            preexisiting_like.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except models.Like.DoesNotExist:
+            return Response(status=status.HTTP_304_NOT_MODIFIED)
+
 
 
 class CommentOnImage(APIView):
