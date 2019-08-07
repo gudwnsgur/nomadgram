@@ -37,6 +37,7 @@ Sphinx = "==2.1.2"
 django_coverage_plugin = "==1.6.0"
 postgres = "*"
 python3 = "*"
+django-taggit = "*"
 
 [requires]
 python_version = "3.7"

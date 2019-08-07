@@ -1,4 +1,5 @@
 from django.db import models
+from taggit.managers import TaggableManager
 from nomadgram.users import models as user_models
 
 # Create your models here.
@@ -20,6 +21,8 @@ class Image(TimeStampedModel):
     caption = models.TextField()
     creator = models.ForeignKey(user_models.User, on_delete=models.PROTECT, null=True, related_name='images')
     #creator : 생성자
+    tags = TaggableManager()
+
 
     #property : field of a model that dosen't go DB but still is inside of a model
     @property
