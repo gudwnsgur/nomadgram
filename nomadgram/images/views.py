@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from . import serializers, models
-
+from nomadgram.notifications import views as notification_views
 
 # Url : path("", view=views.Feed.as_view(), name='feed')
 class Feed(APIView):
@@ -35,6 +35,7 @@ class LikeImage(APIView):
         # if something changes on the DataBase, the request should be post
         user = request.user
 
+
         try :
             found_image = models.Image.objects.get(id=image_id)   
             # 필터링해서 model을 읽고자 할 때 objects 사용
@@ -54,6 +55,9 @@ class LikeImage(APIView):
                 image = found_image
             )   
             new_like.save()
+            notification_views.create_notification(
+               user, found_image.creator, 'like', found_image)
+
             return Response(status=status.HTTP_201_CREATED)
 
 
@@ -95,6 +99,9 @@ class CommentOnImage(APIView):
 
         if serializer.is_valid():
             serializer.save(creator=user, image=found_image)
+            notification_views.create_notification(
+                user, found_image.creator, 'comment', found_image, serializer.data['message'])
+
 
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         else : 
