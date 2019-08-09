@@ -9,7 +9,6 @@ class Feed(APIView):
     def get(self, request, format=None):
         
         user = request.user
-
         following_users = user.following.all()
 
         image_list = []
@@ -21,12 +20,15 @@ class Feed(APIView):
 
                 image_list.append(image)
 
+        my_images = user.images.all()[:2]
+        for image in my_images:
+            image_list.append(image)
+
         sorted_list = sorted(image_list, key=lambda image:image.created_at, reverse=True)
         
         serializer = serializers.ImageSerializer(sorted_list, many=True)
 
-        return Response(serializer.data)        
-
+        return Response(serializer.data)       
 
 
 # Url : path("<int:image_id>/likes/", view=views.LikeImage.as_view(), name='like_image')
@@ -149,3 +151,17 @@ class ModerateComments(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+# path("<int:image_id>", view=views.ImageDetail.as_view(), name='image_detail')
+class ImageDetail(APIView): # only can get my image
+    def get(self, request, image_id, format=None):
+        user = request.user
+
+        try: 
+            image = models.Image.objects.get(id=image_id, creator=user)
+        except models.Image.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        serializer = serializers.ImageSerializer(image)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
