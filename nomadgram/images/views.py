@@ -32,7 +32,6 @@ class Feed(APIView):
 
         return Response(serializer.data)       
 
-
 # Url : path("<int:image_id>/likes/", view=views.LikeImage.as_view(), name='like_image')
 class LikeImage(APIView):
 
@@ -96,7 +95,6 @@ class UnLikeImage(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except models.Like.DoesNotExist:
             return Response(status=status.HTTP_304_NOT_MODIFIED)
-
 
 
 # Url : path("<int:image_id>/comments/", view=views.CommentOnImage.as_view(), name='commet_image')
@@ -169,12 +167,44 @@ class ModerateComments(APIView):
 
 # path("<int:image_id>", view=views.ImageDetail.as_view(), name='image_detail')
 class ImageDetail(APIView): # only can get my image
-    def get(self, request, image_id, format=None):
-        user = request.user
 
+    def find_own_image(self, image_id, user):
         try: 
             image = models.Image.objects.get(id=image_id, creator=user)
+            return image
+        except models.Image.DoesNotExist:
+            return None
+
+    def get(self, request, image_id, format=None):
+        try: 
+            image = models.Image.objects.get(id=image_id)
         except models.Image.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = serializers.ImageSerializer(image)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+    def put(self, request, image_id, format=None):
+        user = request.user
+
+        image = self.find_own_image(image_id, user)
+        
+        if image is None:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        serializer = serializers.InputImageSerializers(image, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save(creator=user)
+            return Response(data=serializer.data, status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, image_id, format=None):
+        user = request.user
+        image = self.find_own_image(image_id, user)
+        
+        if image is None:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        image.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
