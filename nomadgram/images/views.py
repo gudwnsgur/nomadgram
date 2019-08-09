@@ -2,6 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from . import serializers, models
+from nomadgram.users import models as user_models
+from nomadgram.users import serializers as user_serializers
 from nomadgram.notifications import views as notification_views
 
 # Url : path("", view=views.Feed.as_view(), name='feed')
@@ -33,10 +35,21 @@ class Feed(APIView):
 
 # Url : path("<int:image_id>/likes/", view=views.LikeImage.as_view(), name='like_image')
 class LikeImage(APIView):
+
+    def get(self, request, image_id, format=None):
+        likes = models.Like.objects.filter(image__id=image_id)
+
+        like_creators_ids = likes.values('creator_id')
+
+        users = user_models.User.objects.filter(id__in=like_creators_ids)
+
+        serializer = user_serializers.ListUserSerializer(users, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
     def post(self, request, image_id, format=None):         
         # if something changes on the DataBase, the request should be post
         user = request.user
-
 
         try :
             found_image = models.Image.objects.get(id=image_id)   
@@ -104,7 +117,7 @@ class CommentOnImage(APIView):
             notification_views.create_notification(
                 user, found_image.creator, 'comment', found_image, serializer.data['message'])
 
-
+        
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         else : 
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
