@@ -38,6 +38,8 @@ django_coverage_plugin = "==1.6.0"
 postgres = "*"
 python3 = "*"
 django-taggit = "*"
+djangorestframework-jwt = "*"
+django-taggit-serializer = "*"
 
 [requires]
 python_version = "3.7"
