@@ -72,6 +72,7 @@ class ImageSerializer(serializers.ModelSerializer):
         )
 
 class InputImageSerializers(serializers.ModelSerializer):
+
     class Meta:
         model = models.Image
         fields = (
