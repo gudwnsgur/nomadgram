@@ -40,6 +40,7 @@ python3 = "*"
 django-taggit = "*"
 djangorestframework-jwt = "*"
 django-taggit-serializer = "*"
+django-rest-auth = "*"
 
 [requires]
 python_version = "3.7"
