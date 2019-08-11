@@ -6,7 +6,7 @@ from nomadgram.users import models as user_models
 from nomadgram.users import serializers as user_serializers
 from nomadgram.notifications import views as notification_views
 
-# Url : path("", view=views.Feed.as_view(), name='feed')
+# Url : path("", view=views.Images.as_view(), name='images')
 class Images(APIView):
     def get(self, request, format=None):
         

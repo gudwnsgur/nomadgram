@@ -88,7 +88,7 @@ class UserProfile(APIView):
             else:
                 return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-
+# path("<username>/followers", view=views.UserFollowers.as_view(), name="user_followers")
 class UserFollowers(APIView):
     def get(self, request, username, format=None):
 
@@ -103,6 +103,8 @@ class UserFollowers(APIView):
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
+
+# path("<username>/following", view=views.UserFollowing.as_view(), name="user_following")
 class UserFollowing(APIView):
     def get(self, request, username, format=None):
 
@@ -118,6 +120,7 @@ class UserFollowing(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
+# path("search/", view=views.Search.as_view(), name="search")       
 class Search(APIView):
     def get(self, request, format=None):
         username = request.query_params.get('username', None)
@@ -130,6 +133,8 @@ class Search(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+
+# path("<username>/password", view=views.ChangePassword.as_view(), name="change_password")
 class ChangePassword(APIView):
     def put(self, request, username, format=None):
         user = request.user
@@ -154,6 +159,9 @@ class ChangePassword(APIView):
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
        
-    
+
+
+
+# path("login/facebook/", view=views.FacebookLogin.as_view(), name='fb-login')
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
