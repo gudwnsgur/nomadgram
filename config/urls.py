@@ -18,7 +18,7 @@ urlpatterns = [
     path("images/", include("nomadgram.images.urls", namespace="images")),
     path("notifications/", include("nomadgram.notifications.urls", namespace="notifications")),
     path("accounts/", include("allauth.urls")),
-    re_path("", views.ReactAppView.as_view())
+    re_path("", view=views.ReactAppView.as_view())
     # Your stuff: custom urls includes go here
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
