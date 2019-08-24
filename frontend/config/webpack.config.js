@@ -85,7 +85,12 @@ module.exports = function(webpackEnv) {
       },
       {
         loader: require.resolve('css-loader'),
-        options: cssOptions,
+        options: {
+          importLoaders: 1,
+          modules: true,
+          localIdentName: "[path][name]__[local]--[hash:base64:5]",
+          camelCase: "dashes"
+        }
       },
       {
         // Options for PostCSS as we reference these options twice
@@ -423,8 +428,8 @@ module.exports = function(webpackEnv) {
                 importLoaders: 1,
                 sourceMap: isEnvProduction && shouldUseSourceMap,
                 modules: true,
-                camelCase: true,
                 getLocalIdent: getCSSModuleLocalIdent,
+                camelCase: "dashes"
               }),
             },
             // Opt-in support for SASS (using .scss or .sass extensions).
