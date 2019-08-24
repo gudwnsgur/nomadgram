@@ -5,6 +5,7 @@ import thunk from "redux-thunk";
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createBrowserHistory } from "history";
 import { composeWithDevTools } from "redux-devtools-extension";
+import { i18nState } from "redux-i18n";
 import users from 'redux/modules/users';
 
 
@@ -20,7 +21,8 @@ if (env === "development") {
 
 const reducer = combineReducers({   // combine every reducers
     users,
-	router: connectRouter(history)
+    router: connectRouter(history),
+    i18nState
 });
 
 
