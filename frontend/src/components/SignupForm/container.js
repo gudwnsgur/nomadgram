@@ -1,6 +1,6 @@
 import React from "react";
-import LoginForm from "./presenter";
+import SignupForm from "./presenter";
 
-const Container = props => <SignupForm {...props} />
+const Container = props => < SignupForm {...props} />;
 
 export default Container;

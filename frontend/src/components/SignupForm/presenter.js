@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import Ionicon from "react-ionicons";
 import formStyles from "shared/formStyles.scss";
 
-export const SignupForm = props => (
+export const SignupForm = (props, context) => (
     <div className={formStyles.formComponent}>
      <h3 className={formStyles.signupHeader}>
       {context.t("Sign up to see photos and videos from your friends.")}
@@ -35,7 +35,8 @@ export const SignupForm = props => (
   </div>
 );
 
-SignupForm.contextTypes= {
-    t: PropTypes.func.isRequired
+SignupForm.contextTypes = {
+  t: PropTypes.func.isRequired
 };
+
 export default SignupForm;

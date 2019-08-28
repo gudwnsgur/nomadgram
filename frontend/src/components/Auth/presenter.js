@@ -1,9 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styles from "./styles.scss";
-import {SignupForm} from "components/SignupForm";
-import {LoginForm} from "components/LoginForm";
+import LoginForm from "components/LoginForm";
+import SignupForm from "components/SignupForm";
 
+  
 const Auth = (props, context) => (
     <main className={styles.auth}>
       <div className={styles.column}>
