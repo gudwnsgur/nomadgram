@@ -13,27 +13,50 @@ export const SignupForm = (props, context) => (
       {context.t("Log in with Facebook")}
     </button>
     <span className={formStyles.divider}>{context.t("or")}</span>
-    <form className={formStyles.form}>
-      <input type="email" placeholder={context.t("Email")} className={formStyles.textInput} />
-      <input type="text" placeholder={context.t("Full Name")} className={formStyles.textInput} />
-      <input
-        type="username"
-        placeholder={context.t("Username")}
-        className={formStyles.textInput}
-      />
-      <input
-        type="password"
-        placeholder={context.t("Password")}
-        className={formStyles.textInput}
-      />
-      <input type="submit" value={context.t("Sign up")} className={formStyles.button} />
+    
+    
+    <form className={formStyles.form} onSubmit={props.handleSubmit}>
+      <input type="email" 
+             placeholder={context.t("Email")} 
+             className={formStyles.textInput} 
+             value={props.emailValue}
+             onChange={props.handleInputChange}            
+             name="email"/>
+      <input type="text" 
+             placeholder={context.t("Full Name")} 
+             className={formStyles.textInput} 
+             value={props.fullnameValue}
+             onChange={props.handleInputChange}
+             name="fullame"/>
+      <input type="username"
+             placeholder={context.t("Username")}
+             className={formStyles.textInput} 
+             value={props.usernameValue}
+             onChange={props.handleInputChange}
+             name="username"/>
+      <input type="password"
+             placeholder={context.t("Password")}
+             className={formStyles.textInput} 
+             value={props.passwordValue}
+             onChange={props.handleInputChange}
+             name="password"/>
+      <input type="submit" value={context.t("Sign up")} className={formStyles.button}  onChange={props.handleInputChange}/>
     </form>
+
     <p className={formStyles.terms}>
         {context.t("By signing up, you agree to our")} 
         <span> {context.t("Terms & Privacy Policy")} </span>.
     </p>
   </div>
 );
+SignupForm.propTypes = {
+  emailValue: PropTypes.string.isRequired,
+  fullNameValue: PropTypes.string.isRequired,
+  usernameValue: PropTypes.string.isRequired,
+  passwordValue: PropTypes.string.isRequired,
+  handleInputChange: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired
+};
 
 SignupForm.contextTypes = {
   t: PropTypes.func.isRequired
